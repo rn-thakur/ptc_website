@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Penetration Testing Center — BITS Pilani | Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:     #FAFAF7;
+  --cream2:    #F4F2EC;
+  --navy:      #0F1923;
+  --navy2:     #1A2D40;
+  --gold:      #8B6F3D;
+  --gold-lt:   #B08D57;
+  --gold-pale: #D4B483;
+  --gold-bg:   rgba(212,180,131,0.12);
+  --text1:     #0F1923;
+  --text2:     #243852;
+  --text3:     #6B7E8F;
+  --border:    #DDD9D0;
+  --white:     #FFFFFF;
+}
+
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+html, body {
+  width: 100%; 
+  height: 100%; 
+  overflow: hidden;
+  background: var(--cream);
+  font-family: 'Jost', sans-serif;
+  color: var(--text1);
+}
+
+/* ===== KEYFRAMES ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ===== SLIDE SYSTEM ===== */
+.deck {
+  position: relative;
+  width: 100%; 
+  height: 100%;
+}
+
+.slide {
+  position: absolute; 
+  inset: 0;
+  padding: 4vh 5vw;
+  display: flex; 
+  flex-direction: column;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Animation triggers */
+.slide .a      { opacity: 0; }
+.slide .a-r    { opacity: 0; }
+.slide .a-s    { opacity: 0; }
+
+.slide.active .a   { animation: fadeUp    0.8s ease forwards; animation-delay: var(--d, 0s); }
+.slide.active .a-r { animation: slideRight 0.7s ease forwards; animation-delay: var(--d, 0s); }
+.slide.active .a-s { animation: scaleIn   0.7s ease forwards; animation-delay: var(--d, 0s); }
+
+/* ===== SHARED ELEMENTS ===== */
+.slide-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(30px, 1.3vw, 20px);
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  display: flex; 
+  align-items: center; 
+  gap: 14px;
+  margin-bottom: 2vh;
+}
+.slide-tag::before {
+  content: '';
+  display: block; 
+  width: 36px; 
+  height: 1px;
+  background: var(--gold-pale);
+  flex-shrink: 0;
+}
+
+.slide-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(42px, 6vw, 90px);
+  font-weight: 300; 
+  line-height: 0.95;
+  letter-spacing: -0.015em;
+  color: var(--navy);
+}
+.slide-headline em { 
+  font-style: italic; 
+  color: var(--gold-pale); 
+}
+
+.gold-rule {
+  display: block; 
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-pale) 0%, transparent 100%);
+  margin: 2.5vh 0;
+}
+
+/* ===== PROGRESS BAR ===== */
+#progress {
+  position: fixed; 
+  bottom: 0; 
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-pale));
+  width: 0%;
+  z-index: 999;
+}
+
+/* ===== NAV DOTS ===== */
+#nav-dots {
+  position: fixed; 
+  bottom: 24px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex; 
+  gap: 10px; 
+  z-index: 999;
+}
+.dot {
+  width: 8px; 
+  height: 8px; 
+  border-radius: 50%;
+  background: rgba(15,25,35,0.15);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.dot.active { 
+  background: var(--gold-pale); 
+  transform: scale(1.4); 
+}
+.dot:hover { 
+  background: var(--gold); 
+  transform: scale(1.2); 
+}
+
+/* ===== SLIDE COUNTER ===== */
+#counter {
+  position: fixed; 
+  bottom: 20px; 
+  right: 48px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; 
+  letter-spacing: 0.18em;
+  color: var(--text3);
+  z-index: 999;
+}
+
+/* ===== DECORATIVE ELEMENTS ===== */
+.grid-overlay::before {
+  content: '';
+  position: absolute; 
+  inset: 0; 
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(139,111,61,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,111,61,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.slide-header {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.slide-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slide-header-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+/* ============================================================
+   SLIDE 1 — TITLE CARD
+============================================================ */
+.s1 { 
+  justify-content: space-between; 
+  align-items: center;
+}
+
+.s1-top {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  width: 100%;
+  padding-top: 1vh;
+}
+
+.s1-bosch {
+  background: #E20015; 
+  color: #fff;
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-weight: 700; 
+  letter-spacing: 3px;
+  padding: 6px 18px; 
+  border-radius: 2px;
+}
+
+.s1-collab-wrap {
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+  font-size: clamp(20px, 1vw, 16px);
+  letter-spacing: 0.18em; 
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+.s1-center { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center;
+  text-align: center;
+  padding: 2vh 0;
+}
+
+.s1-mou-bar {
+  width: 100%;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(18px, 0.85vw, 13px);
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.s1-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(58px, 8.5vw, 120px);
+  font-weight: 300; 
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  color: var(--navy);
+  margin-bottom: 3vh;
+}
+.s1-headline em { 
+  font-style: italic; 
+  color: var(--gold-pale); 
+}
+
+.s1-body {
+  font-size: clamp(20px, 1.4vw, 22px);
+  font-weight: 300; 
+  letter-spacing: 0.05em;
+  color: var(--text2);
+  border-left: 2px solid var(--gold-pale);
+  padding-left: 22px;
+  max-width: 600px;
+  line-height: 1.8;
+  margin: 0 auto;
+}
+
+.s1-bottom {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-end;
+  width: 100%;
+  border-top: 1px solid var(--border);
+  padding-top: 3vh;
+}
+
+.s1-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.s1-brand-img {
+  width: clamp(250px, 5vw, 70px);
+  height: clamp(150px, 4vw, 55px);
+  object-fit: contain;
+}
+.s1-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 3.5vw, 50px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--navy);
+  line-height: 1.25;
+}
+.s1-brand span {
+  display: block;
+  font-family: 'Jost', sans-serif;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 6px;
+}
+
+.s1-est {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(20px, 0.95vw, 14px);
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  text-align: right; 
+  line-height: 1.8;
+}
+
+.s1-bosch-img {
+  height: 100px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ============================================================
+   SLIDE 2 — BY THE NUMBERS
+============================================================ */
+.s2 { 
+  justify-content: flex-start; 
+  align-items: center;
+}
+
+.s2-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+  width: 100%;
+  flex: 1;
+  margin-top: 3vh;
+}
+
+.s2-stat {
+  background: var(--cream2);
+  border: 1px solid var(--border);
+  padding: clamp(24px, 3vh, 40px) clamp(18px, 2.2vw, 32px);
+  display: flex; 
+  flex-direction: column; 
+  justify-content: flex-end;
+  position: relative; 
+  overflow: visible;
+}
+.s2-stat::before {
+  content: '';
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  height: 3px;
+  background: var(--gold-pale);
+}
+
+.s2-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(54px, 7.5vw, 110px);
+  font-weight: 700; 
+  color: var(--navy);
+  line-height: 0.95;
+  margin-bottom: 12px;
+}
+.s2-num sup { 
+  font-size: 0.33em; 
+  color: var(--gold-pale); 
+  vertical-align: super; 
+}
+
+.s2-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 0.9vw, 14px);
+  letter-spacing: 0.1em; 
+  text-transform: uppercase;
+  color: var(--text3); 
+  line-height: 1.55;
+}
+.s2-img-wrap {
+  width: calc(100% + 56px); /* Even number */
+  margin: 0 -28px; /* Half of 56px */
+  height: 100%;
+  overflow: visible;
+  border-radius: 2px; /* Optional: rounded corners */
+}
+
+.s2-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures images fill the container without distortion */
+}
+
+/* ============================================================
+   SLIDE 3 — RESEARCH PROJECTS
+============================================================ */
+.s3 { 
+  justify-content: flex-start; 
+  align-items: center;
+}
+
+.s3-list {
+  display: flex; 
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  flex: 1;
+  margin-top: 3vh;
+}
+
+.s3-row {
+  display: grid;
+  grid-template-columns: clamp(42px, 4.5vw, 70px) 1fr auto;
+  gap: clamp(18px, 2.2vw, 36px);
+  align-items: center;
+  padding: clamp(14px, 1.8vh, 24px) clamp(20px, 2.5vw, 36px);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: all 0.25s;
+}
+.s3-row:hover { 
+  border-color: var(--gold-pale); 
+  box-shadow: 0 4px 16px rgba(139,111,61,0.12);
+}
+
+.s3-id {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 700;
+  color: rgba(139,111,61,0.60);
+  line-height: 1;
+}
+
+.s3-name {
+  font-size: clamp(35px, 1.3vw, 20px);
+  font-weight: 500; 
+  color: var(--navy);
+  margin-bottom: 8px; 
+  line-height: 1.35;
+}
+
+.s3-chips {
+  display: flex; 
+  gap: 8px; 
+  flex-wrap: wrap;
+}
+.s3-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(20px, 0.85vw, 13px);
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  background: var(--gold-bg);
+  border: 1px solid rgba(139,111,61,0.25);
+  padding: 4px 10px; 
+  border-radius: 3px;
+}
+
+.s3-metric { 
+  text-align: right; 
+  white-space: nowrap; 
+}
+.s3-metric-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 700; 
+  color: var(--navy); 
+  line-height: 0.95;
+}
+.s3-metric-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(20px, 0.85vw, 13px);
+  letter-spacing: 0.1em; 
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   SLIDE 4 — COLLABORATIONS
+============================================================ */
+.s4 { 
+  justify-content: flex-start; 
+  align-items: center;
+}
+
+.s4-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 100%;
+  flex: 1;
+  margin-top: 3vh;
+}
+
+.s4-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  padding: clamp(28px, 3.5vh, 48px) clamp(24px, 2.8vw, 40px);
+  display: flex; 
+  flex-direction: column;
+  position: relative; 
+  overflow: hidden;
+}
+.s4-card::before {
+  content: '';
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  bottom: 0; 
+  width: 3px;
+  background: var(--gold-pale);
+}
+
+.s4-flag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(20px, 0.95vw, 14px);
+  letter-spacing: 0.16em; 
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+
+.s4-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(50px, 1.8vw, 28px);
+  font-weight: 600; 
+  line-height: 1.25;
+  color: var(--navy); 
+  flex: 1; 
+  margin-bottom: 16px;
+}
+
+.s4-tags {
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.s4-tag {
+  font-size: clamp(20px, 0.9vw, 14px);
+  letter-spacing: 0.04em;
+  color: var(--text2);
+  background: var(--cream2);
+  border: 1px solid var(--border);
+  padding: 5px 12px; 
+  border-radius: 3px;
+}
+
+.s4-big-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(34px, 4vw, 60px);
+  font-weight: 700; 
+  color: var(--navy); 
+  line-height: 0.95;
+  margin-bottom: 6px;
+}
+.s4-big-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(20px, 0.9vw, 14px);
+  letter-spacing: 0.08em;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+.s4-outcome {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 0.9vw, 14px);
+  color: var(--gold-pale);
+  letter-spacing: 0.05em;
+  margin-top: auto;
+}
+.s4-outcome::before { content: '✦ '; }
+
+/* ============================================================
+   SLIDE 5 — RECOGNITION
+============================================================ */
+.s5 { 
+  justify-content: flex-start; 
+  align-items: center;
+}
+
+.s5-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 100%;
+  flex: 1;
+  margin-top: 3vh;
+}
+
+.s5-cell {
+  background: var(--cream2);
+  border: 1px solid var(--border);
+  padding: clamp(32px, 4vh, 56px) clamp(26px, 3vw, 44px);
+  display: flex; 
+  flex-direction: column;
+}
+
+.s5-award {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(25px, 0.95vw, 14px);
+  letter-spacing: 0.18em; 
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+
+.s5-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(64px, 9vw, 130px);
+  font-weight: 700; 
+  color: var(--navy);
+  line-height: 0.88;
+  margin-bottom: 12px;
+}
+.s5-big sup { 
+  font-size: 0.3em; 
+  color: var(--gold-pale); 
+  vertical-align: super; 
+}
+
+.s5-desc {
+  font-size: clamp(20px, 1.4vw, 22px);
+  font-weight: 500; 
+  color: var(--navy);
+  margin-bottom: 12px; 
+  line-height: 1.3;
+}
+
+.s5-body {
+  font-size: clamp(28px, 1.2vw, 18px);
+  font-weight: 300; 
+  color: var(--text2);
+  line-height: 1.75;
+}
+
+/* ============================================================
+   SLIDE 6 — CLOSE / CTA
+============================================================ */
+.s6 { 
+  justify-content: center; 
+  align-items: center;
+  position: relative;
+}
+
+.s6-inner {
+  position: relative; 
+  z-index: 1;
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  text-align: center;
+  width: 100%;
+}
+
+.s6-watermark {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(80px, 13vw, 180px);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  margin-bottom: clamp(8px, 1.5vw, 16px);
+  user-select: none;
+  opacity: 0.8;
+}
+
+.s6-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 6.5vw, 88px);
+  font-weight: 300; 
+  line-height: 1.05;
+  color: var(--navy);
+  position: relative; 
+  z-index: 1;
+  margin-bottom: 3vh;
+}
+.s6-headline em { 
+  font-style: italic; 
+  color: var(--gold-pale); 
+}
+
+.s6-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(12px, 1.1vw, 16px);
+  letter-spacing: 0.2em; 
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 4vh;
+}
+
+.s6-partners {
+  display: flex; 
+  gap: clamp(24px, 3.5vw, 48px);
+  align-items: center; 
+  margin-bottom: 4.5vh;
+  flex-wrap: wrap; 
+  justify-content: center;
+}
+
+.s6-partner {
+  display: flex; 
+  align-items: center; 
+  gap: 12px;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 400; 
+  color: var(--text2);
+}
+.s6-dot {
+  width: 6px; 
+  height: 6px; 
+  border-radius: 50%;
+  background: var(--gold-pale); 
+  flex-shrink: 0;
+}
+
+.s6-cta {
+  display: inline-flex; 
+  align-items: center; 
+  gap: 14px;
+  background: var(--gold-pale); 
+  color: var(--navy);
+  font-size: clamp(13px, 1.2vw, 18px);
+  font-weight: 500; 
+  letter-spacing: 0.14em; 
+  text-transform: uppercase;
+  padding: clamp(14px, 1.8vh, 22px) clamp(28px, 3.5vw, 44px);
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.s6-cta:hover {
+  background: var(--gold-lt);
+  transform: translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+<!-- ========== SLIDE 1 — TITLE ========== -->
+  <div class="slide s1 grid-overlay" data-index="0">
+    
+    <div class="s1-top a" style="--d:0.1s">
+      <div class="slide-tag">// PTC · EST. APRIL 2025</div>
+      <div class="s1-collab-wrap">
+        <span style="margin-right: -50px; position: relative; z-index: 10;">In Collaboration with</span> &nbsp; <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxIHBhUIBxMWFhUREx0XFxUXGBkbHRYXHRMYGhgaGRYYHCkgGxolGxYaIj0hKSorLi4uFx83OD8sNyg5OisBCgoKDg0OGQ8QFSsdHx0rLS0tLS03LS0tLSstKy0tLS0tKystLS0rLS0tLSsrKzcrOC0rLS0rLS0tLSstLS0tK//AABEIAMABBgMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYCBAcDAf/EAEsQAAIBAgIFBwYJCwALAAAAAAABAgMEBREGEiExQRNRUmFxgZEHFDJCYqEWIiNygpKisdIVM0NTVJOUsrTB0yQmNDZzo7PCw9Hx/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA//EAB4RAQEAAgICAwAAAAAAAAAAAAABETEhQQISIlFh/9oADAMBAAIRAxEAPwDuIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG8lmwAMY1FJ5RafeZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMKtRUoa8/8A6+CS4sDKT1VrS3I1Kl7n+ZWzpPd3LfL3J85G4vitOxtXeYnNQhHg9qT4LJenNvgs9u7dm4q3tb3SP5Wq52Vu9yWXnNRc8m81QT5tsufIuEyksVxuhhq1sVuIwz3KU9TP5sIvWfZ8YjY6Q0q0s7K1uavtQtZJP6dRRT8SdwjRu1weWvY0Yqb31ZZzqS+dVnnJ+JLAU+WMOa+Xw+7y66NOXujNv3GEMdtIzUKkqltJ7lUhUoZ/WSiy5mNSmqsHTqpNPems0+1MZMIale1qcFUpSjWi+fJN9ko/Ffh3m/Y4nTvJcnBuM1vpyWUl3cV1rNEZX0Wp05OtgsnbT5obacvnUX8XLs1X1kfWk+WjZ45Dk6mfydaDerJ+xPfGXsv3g5i3ghMOxSVG4VjirWtLZTq5ZKp7LW6M+rc+BNkUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfG8lmyAxfGKdpbzvbyWrClHPsXUuM5Z5Zb8mlsbZuaQXys7JuXNu59qSj3trZ0VIqOj1q9I8e5a6+NQspqTz3VLprWjnz8nFqWXSnHmLJ2lvSUwHBp3lytIdJVlOK1qFCXo2sOlLg67W1y9Xcssts7WuHWeW2MebapPte+K6t+7PLcfLutytXJejF7OuSe/si9nzk+iRmF4jHEpVKltthTqumpdOcctdr2U5KOfFxlwyzDc0Pv54lo9Tu7p5ycqi7o1pxjv27oraTJXPJ7/ALpUvn1f6mqWMigAAi8Q15VW6M3GUctXm3ZvOO5558e7I8re7hi0JYXisEp5bYP0Zrp03v398X4nvdfn5dq/lRXqFxDHrNuhLUq0KjjrLfTqxbWfzXlue9MqZbFzZ8g/yXiLc6c18lUe95erJ8KkeD4+KW/o3icq7lh1686tFel+sp7lPt4Pr7T7ZVlpFg8qVytSrCWrNL9HVjulHqexrnTy5yoX13Uwy/hfZfHoS+NFetHPKpHrzWeT58mXaZw6UDChVjcUY1qLzjOKlFrims0/AzMtAAAAAAAAAAAAAAAAAAAAAAAAAAA555Q8VVGsoN7IpzfZHOMftKr4li0XsXguiVOlLZUlHXm3+uqvN59SlLLsic+0w/0/SWNrU3VZUKbX/ElCUvfUZ0rSivyGGSmuEZPxg4ffNGr1GJu1WsbxKde0jh2FvKrdVFQpS4wi03Op1uNOMpdpPWljTwq3VhZLVhSajFdSpU974t72+LbKvodDz3S9VJ7Vb20pLqnUnGOf1YSXeWu/uFRvZRlxn/46Yu8E1l44JavCMPVlSnJxjKTWyPrTlPinxkzf84l0pfZ/CVfRXAIY1gkcRvq1zr1J1M9W4qxWyvUisoxlkllFbiX+BdD9dd/xVb8ROGuUj5xLpS+z+EecS6Uvs/hI74GUP113/FVvxD4F0P113/FVvxDg5bs56zzbbbeeby5kuCXMVnAqHJWdTEaXqX1eE+uEriWXepP7TJhWcMFhKlSlUktbY6lSU36Ke+Tb4njoZT87wC4pv9JdXC8asv8A2XpO2rZX6tNLITXo3UeSn8+KcqUu30o/SRjp9acm/Oo+sk33ZRb99NdzK5pDdeaV/ON3JVKdVdWUozXuL5ppR5bBJ9UZvwpTn98F4F1U3K1PJzfedaO8hJ5u3qSp92yUe5Rml9EtJzryT1n51dW8t2VKa7Xyif8AKjopm7a8dAAIoAAAAAAAAAAAAAAAAAAAAAAADkWNw1NKKNeXC4tW+xOjn9xetOtmBzkui19uE/ugyp6bWUvOKnJbJLNp8zUteHucS5YrKOM6Lq6p+jUpqfZGUMpeEZPwN3pidxUvJnWT0grRe+VvFrsjUef86JXS6vyOILrk/wDp0ioaL3TwbSanXrbI5ulU6oy2b+CU1Fvqiyd8otXksRh2y/kolx8kz8Vh8nG3Q6i/aq/1NQsxx/C9J54baK0t3FRi3ktaayzeb2KaS2tvdxN1aa1OlH69T/IT1q+8dTBy34aVOnH69T/IYy02qrdKH16n+QnrT3izaZVuRa65f9kTPycT/wBXpzl+01n/AMxlFxTSCpicI8s1km2ss3m3kntk23uRatBrmNDQqc6zyUq9XN+zrNzfaoKT7i2YhLmqdprN1bqrbw3uMIZe1ycI5eJ1bSZ6uETz6FT+nqnK8MoSxvS2jGottW45afMowlyss+ptKP0jpWmFbVw90lxWXfJpL7CqeAu5Dx1arPkwp6uNXWXq0aK8ZVX/AGOjFK8mlv8AJXV61+cr8nF88aUEs/rymu4upny2146AARQAAAAAAAAAAAAAAAAAAAAAAAFX0ts/lo3C3T+K/nLNrxWf1Eeeg1zqUKmC1/0bc6afrUpvNrr1ZNrslEsmIWivrOVvU2ay2Pma2p9zyZSZUqlK4VehlGvbS2x4PZti+eEo8etM1OZhm8XKJ0mwfzPEJUpLNPam/Wi9z63wfWnzmpi9WWIYfRlcPWnCU4t8WlCkot9bSe3i0zoVxRpaU4SqlJ6s455NrbTn60JLm3Zrjsa4MpFxZSoXTtbqOrNerzrpRfrR6/uaNSseUwn/ACf4LbXWiVGvdW9Gcm6mcpU4Sbyr1Es21m9iLF8HbL9kt/3NP8JG+ThZaG0V7VX+oqFlMV0iL+Dll+yW/wC5p/hPvwdsv2S3/c0/wkmCK53p7h1K2hTpWVOEFry2Qior0IcIohqNSVlo7HD5tLWlKpP2ISnrxi30mlGT5sornLZpvFNqVRpKMm228slqR2vmWwr+j+APSmqq9dONknnm807p8FFb1R55etuXOty8OdnKV8meFZUp6Q3Cy5aOpRz4UE83Pq15LPsjB8T5pliWpSlWim3H0Y8ZTllGlBLnea2cHUkWjE7pQpchRSyWzLg30MuZcerZx2VfALT8v6Q+fT20LKbylwrXW5yXPGnm9vTfsk/WrOlq0Zwv8i4DSw9vOUIfHfSqNuVSXfOUn3kmAZaAAAAAAAAAAAAAAAAAAAAAAAAAAAIjHMLdy1eWWSqwWWT3VI79SX9nwfaS4Ap1lUfLu7w16tSPxatKWzPL1Zrg+aX9myWn5tpFR81v4ZTjt1JNxnF88JrJ5dae7fzHvi2CxxCauKMnSrRWUasd+XRnHdOPU+7Ir97cSsVqaRUsox3XFNOVPtbXxqT7dnWa2zpa8PsaeG2UbOyjqwgsks2+Obzb2tttvN85sldsb2bpKpZVo1YcNbKfhOLzz7cyQp4lL9JTX0ZZ/fFEwuUkDS/KGa2Qfe4/2bPOV9J+jqrs1pffq5e8iscUwS2xGqrjEoKWot0m9RpZta8M9WSWb3oyuLvWjqUM0ufc2uaK4L2vDPPNQmKaQ0LKuqNxUc6r9GlFcpUb9mlBbH15LtPGnhN3pC88U1rW3e+lGWdequapUi8qUX0Yty2vai4TP01K9SppJeywrBZatOD1bi6juprjRov1qzz2vaoZ5vOTyLrh9lTw6yhZWUVCnTioxiuCX3vr4n2xs6eH2kbSyhGEILKMYrJJdh7i0kAARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJeaKWl1V5eNPk5v16MpUpZ875NpSfbmaktFqtP/Y7+4XVUjRqe900/eWYDKYVZaN3jeVTEZZezb0U/F5/cZR0MhW2YldXVZPfF1eTj9WgobO1ss4Lkw0cLwe3wilyeGUYU09+pFJy+c98n1s3gCKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9k=" alt="Bosch Logo" class="s1-bosch-img" /><span class="s1-bosch" style="margin-left: -30px;">BOSCH</span>
+      </div>
+    </div>
+    
+    <div class="s1-center">
+      <div class="s1-headline a" style="--d:0.3s; margin-top: -40px;">
+        Securing the<br>Machines That<br><em>Move the World.</em>
+      </div>
+      <div class="gold-rule a" style="--d:0.65s; max-width:420px;"></div>
+      <div class="s1-body a" style="--d:0.85s; margin-top: -50px;">
+        Applied Penetration Testing, Cybersecurity & System Validation for automotive, IoT and healthcare applications — formal partnership with Bosch Global Software Technologies operating on live industrial platforms, not simulations.
+      </div>
+    </div>
+    <div class="s1-mou-bar" style="--d:0.65s; margin-bottom: -50px; z-index: 100;  background: var(--bg, #ffffff);">
+    Formal MOU — Bosch Global Software Technologies &nbsp;·&nbsp;
+    23 Active Lab Modules · 5 Research Projects Published &nbsp;·&nbsp;
+    IEEE EDTM 2026 · Iowa State University · MeitY / DSCI
+    </div>
+    <div class="s1-bottom a" style="--d:1.1s; display: flex; justify-content: center;">
+  <div class="s1-brand-wrap">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShaGJCGh76iC0XXCQtNmU1k8eIG76szdRz6Q&s" alt="BITS Pilani WILP Logo" class="s1-brand-img" />
+    <div class="s1-brand">
+      Penetration Testing Center
+      <span>BITS Pilani · WILP Division</span>
+    </div>
+  </div>
+</div>
+    
+  </div>
+
+  <!-- ========== SLIDE 2 — STATS ========== -->
+  <div class="slide s2" data-index="1">
+    <div class="slide-header">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShaGJCGh76iC0XXCQtNmU1k8eIG76szdRz6Q&s" alt="BITS Pilani WILP Logo" class="slide-header-logo s1-brand-img" />
+  <div class="slide-header-right">
+    <img src="data:image/jpeg;base64,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" alt="Bosch Logo" class="slide-header-logo s1-bosch-img" />
+    <span class="s1-bosch" style="margin-left: -30px;">BOSCH</span>
+  </div>
+</div>
+    <div class="slide-tag a" style="--d:0.1s">// BY THE NUMBERS</div>
+    <div class="slide-headline a" style="--d:0.25s">Research & <em>Impact.</em></div>
+
+    <div class="s2-grid">
+      <div class="s2-stat a" style="--d:0.45s">
+        <div class="s2-img-wrap">
+        <img src="research.png" class="s2-img">
+        </div>
+        <div class="s2-num" data-count="5" data-suffix="+">0</div>
+        <div class="s2-label">Published<br>Research Projects</div>
+      </div>
+
+      <div class="s2-stat a" style="--d:0.6s">
+        <div class="s2-img-wrap">
+        <img src="bosch_setup.png" class="s2-img">
+        </div>
+        <div class="s2-num" data-count="23">0</div>
+        <div class="s2-label">Active<br>Lab Modules</div>
+      </div>
+
+      <div class="s2-stat a" style="--d:0.75s">
+        <div class="s2-img-wrap">
+        <img src="csic.png" class="s2-img" >
+        </div>
+        <div class="s2-num" data-count="60" data-suffix="th">0</div>
+        <div class="s2-label">of 800 Teams —<br>MeitY National Challenge</div>
+      </div>
+
+      <div class="s2-stat a" style="--d:0.9s">
+        <div class="s2-img-wrap">
+        <img src="neurax.png" class="s2-img">
+        </div>
+        <div class="s2-num" data-count="1" data-suffix="st">0</div>
+        <div class="s2-label">NEURAX 2.0<br>National Prize</div>
+      </div>
+
+      <div class="s2-stat a" style="--d:1.05s">
+        <div class="s2-img-wrap">
+        <img src="q1.png" class="s2-img" >
+        </div>
+        <div class="s2-num" data-static="Q1">—</div>
+        <div class="s2-label">IEEE Access<br>SCIMAGO Journal</div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- ========== SLIDE 3 — RESEARCH ========== -->
+  <div class="slide s3" data-index="2">
+    
+    <div class="slide-header">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShaGJCGh76iC0XXCQtNmU1k8eIG76szdRz6Q&s" alt="BITS Pilani WILP Logo" class="slide-header-logo s1-brand-img" />
+  <div class="slide-header-right">
+    <img src="data:image/jpeg;base64,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" alt="Bosch Logo" class="slide-header-logo s1-bosch-img" />
+    <span class="s1-bosch" style="margin-left: -30px;">BOSCH</span>
+  </div>
+</div>
+    <div class="slide-tag a" style="--d:0.1s">// RESEARCH PROJECTS since 2025</div>
+    <div class="slide-headline a" style="--d:0.25s">Five Problems. <em>Verified Results.</em></div>
+
+    <div class="s3-list">
+      <div class="s3-row a" style="--d:0.45s">
+        <div class="s3-id">01</div>
+        <div>
+          <div class="s3-name">ECU Fingerprinting — CAN Bus Hardware Spoofing Detection</div>
+          <div class="s3-chips">
+            <span class="s3-chip">Automotive Security</span>
+            <span class="s3-chip">AI / ML</span>
+            <span class="s3-chip">XGBoost · TFLite</span>
+            <span class="s3-chip">IEEE Xplore ICNGN 2025</span>
+          </div>
+        </div>
+        <div class="s3-metric">
+          <div class="s3-metric-num">98%</div>
+          <div class="s3-metric-lbl">Accuracy</div>
+        </div>
+      </div>
+
+      <div class="s3-row a" style="--d:0.65s">
+        <div class="s3-id">02</div>
+        <div>
+          <div class="s3-name">Explainable ML + LLM Anomaly Detection — AWS CloudTrail</div>
+          <div class="s3-chips">
+            <span class="s3-chip">Cloud Security</span>
+            <span class="s3-chip">LLM / NLP</span>
+            <span class="s3-chip">XGBoost · AWS</span>
+            <span class="s3-chip">SPACE 2025 · IIT Guwahati</span>
+          </div>
+        </div>
+        <div class="s3-metric">
+          <div class="s3-metric-num">F1: 0.60</div>
+          <div class="s3-metric-lbl">Score</div>
+        </div>
+      </div>
+
+      <div class="s3-row a" style="--d:0.85s">
+        <div class="s3-id">03</div>
+        <div>
+          <div class="s3-name">IoT OTA Firmware Security — DNS Spoofing & Protocol Downgrade</div>
+          <div class="s3-chips">
+            <span class="s3-chip">IoT Security</span>
+            <span class="s3-chip">Network Security</span>
+            <span class="s3-chip">Scapy · Python · VirtualBox</span>
+          </div>
+        </div>
+        <div class="s3-metric">
+          <div class="s3-metric-num">0</div>
+          <div class="s3-metric-lbl">False Positives</div>
+        </div>
+      </div>
+
+      <div class="s3-row a" style="--d:1.05s">
+        <div class="s3-id">04</div>
+        <div>
+          <div class="s3-name">Dual-Lock Secure Bootloader — SHA-256 + RSA + UART Deinitialization</div>
+          <div class="s3-chips">
+            <span class="s3-chip">Embedded Security</span>
+            <span class="s3-chip">Cryptography</span>
+            <span class="s3-chip">ARM MCU · C/C++</span>
+          </div>
+        </div>
+        <div class="s3-metric">
+          <div class="s3-metric-num">60s</div>
+          <div class="s3-metric-lbl">Debug Window</div>
+        </div>
+      </div>
+
+      <div class="s3-row a" style="--d:1.25s">
+        <div class="s3-id">05</div>
+        <div>
+          <div class="s3-name">AI Thermal Management for EV Batteries — Adversarial Attack Analysis</div>
+          <div class="s3-chips">
+            <span class="s3-chip">EV Security</span>
+            <span class="s3-chip">Deep RL · Hardware-in-Loop</span>
+            <span class="s3-chip">PyTorch · TensorFlow</span>
+          </div>
+        </div>
+        <div class="s3-metric">
+          <div class="s3-metric-num">26°C</div>
+          <div class="s3-metric-lbl">vs 29.9°C PID</div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- ========== SLIDE 4 — COLLABORATIONS ========== -->
+  <div class="slide s4" data-index="3">
+    
+    <div class="slide-header">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShaGJCGh76iC0XXCQtNmU1k8eIG76szdRz6Q&s" alt="BITS Pilani WILP Logo" class="slide-header-logo s1-brand-img" />
+  <div class="slide-header-right">
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxIHBhUIBxMWFhUREx0XFxUXGBkbHRYXHRMYGhgaGRYYHCkgGxolGxYaIj0hKSorLi4uFx83OD8sNyg5OisBCgoKDg0OGQ8QFSsdHx0rLS0tLS03LS0tLSstKy0tLS0tKystLS0rLS0tLSsrKzcrOC0rLS0rLS0tLSstLS0tK//AABEIAMABBgMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABQYCBAcDAf/EAEsQAAIBAgIFBwYJCwALAAAAAAABAgMEBREGEiExQRNRUmFxgZEHFDJCYqEWIiNygpKisdIVM0NTVJOUsrTB0yQmNDZzo7PCw9Hx/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA//EAB4RAQEAAgICAwAAAAAAAAAAAAABETEhQQISIlFh/9oADAMBAAIRAxEAPwDuIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG8lmwAMY1FJ5RafeZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMKtRUoa8/8A6+CS4sDKT1VrS3I1Kl7n+ZWzpPd3LfL3J85G4vitOxtXeYnNQhHg9qT4LJenNvgs9u7dm4q3tb3SP5Wq52Vu9yWXnNRc8m81QT5tsufIuEyksVxuhhq1sVuIwz3KU9TP5sIvWfZ8YjY6Q0q0s7K1uavtQtZJP6dRRT8SdwjRu1weWvY0Yqb31ZZzqS+dVnnJ+JLAU+WMOa+Xw+7y66NOXujNv3GEMdtIzUKkqltJ7lUhUoZ/WSiy5mNSmqsHTqpNPems0+1MZMIale1qcFUpSjWi+fJN9ko/Ffh3m/Y4nTvJcnBuM1vpyWUl3cV1rNEZX0Wp05OtgsnbT5obacvnUX8XLs1X1kfWk+WjZ45Dk6mfydaDerJ+xPfGXsv3g5i3ghMOxSVG4VjirWtLZTq5ZKp7LW6M+rc+BNkUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfG8lmyAxfGKdpbzvbyWrClHPsXUuM5Z5Zb8mlsbZuaQXys7JuXNu59qSj3trZ0VIqOj1q9I8e5a6+NQspqTz3VLprWjnz8nFqWXSnHmLJ2lvSUwHBp3lytIdJVlOK1qFCXo2sOlLg67W1y9Xcssts7WuHWeW2MebapPte+K6t+7PLcfLutytXJejF7OuSe/si9nzk+iRmF4jHEpVKltthTqumpdOcctdr2U5KOfFxlwyzDc0Pv54lo9Tu7p5ycqi7o1pxjv27oraTJXPJ7/ALpUvn1f6mqWMigAAi8Q15VW6M3GUctXm3ZvOO5558e7I8re7hi0JYXisEp5bYP0Zrp03v398X4nvdfn5dq/lRXqFxDHrNuhLUq0KjjrLfTqxbWfzXlue9MqZbFzZ8g/yXiLc6c18lUe95erJ8KkeD4+KW/o3icq7lh1686tFel+sp7lPt4Pr7T7ZVlpFg8qVytSrCWrNL9HVjulHqexrnTy5yoX13Uwy/hfZfHoS+NFetHPKpHrzWeT58mXaZw6UDChVjcUY1qLzjOKlFrims0/AzMtAAAAAAAAAAAAAAAAAAAAAAAAAAA555Q8VVGsoN7IpzfZHOMftKr4li0XsXguiVOlLZUlHXm3+uqvN59SlLLsic+0w/0/SWNrU3VZUKbX/ElCUvfUZ0rSivyGGSmuEZPxg4ffNGr1GJu1WsbxKde0jh2FvKrdVFQpS4wi03Op1uNOMpdpPWljTwq3VhZLVhSajFdSpU974t72+LbKvodDz3S9VJ7Vb20pLqnUnGOf1YSXeWu/uFRvZRlxn/46Yu8E1l44JavCMPVlSnJxjKTWyPrTlPinxkzf84l0pfZ/CVfRXAIY1gkcRvq1zr1J1M9W4qxWyvUisoxlkllFbiX+BdD9dd/xVb8ROGuUj5xLpS+z+EecS6Uvs/hI74GUP113/FVvxD4F0P113/FVvxDg5bs56zzbbbeeby5kuCXMVnAqHJWdTEaXqX1eE+uEriWXepP7TJhWcMFhKlSlUktbY6lSU36Ke+Tb4njoZT87wC4pv9JdXC8asv8A2XpO2rZX6tNLITXo3UeSn8+KcqUu30o/SRjp9acm/Oo+sk33ZRb99NdzK5pDdeaV/ON3JVKdVdWUozXuL5ppR5bBJ9UZvwpTn98F4F1U3K1PJzfedaO8hJ5u3qSp92yUe5Rml9EtJzryT1n51dW8t2VKa7Xyif8AKjopm7a8dAAIoAAAAAAAAAAAAAAAAAAAAAAADkWNw1NKKNeXC4tW+xOjn9xetOtmBzkui19uE/ugyp6bWUvOKnJbJLNp8zUteHucS5YrKOM6Lq6p+jUpqfZGUMpeEZPwN3pidxUvJnWT0grRe+VvFrsjUef86JXS6vyOILrk/wDp0ioaL3TwbSanXrbI5ulU6oy2b+CU1Fvqiyd8otXksRh2y/kolx8kz8Vh8nG3Q6i/aq/1NQsxx/C9J54baK0t3FRi3ktaayzeb2KaS2tvdxN1aa1OlH69T/IT1q+8dTBy34aVOnH69T/IYy02qrdKH16n+QnrT3izaZVuRa65f9kTPycT/wBXpzl+01n/AMxlFxTSCpicI8s1km2ss3m3kntk23uRatBrmNDQqc6zyUq9XN+zrNzfaoKT7i2YhLmqdprN1bqrbw3uMIZe1ycI5eJ1bSZ6uETz6FT+nqnK8MoSxvS2jGottW45afMowlyss+ptKP0jpWmFbVw90lxWXfJpL7CqeAu5Dx1arPkwp6uNXWXq0aK8ZVX/AGOjFK8mlv8AJXV61+cr8nF88aUEs/rymu4upny2146AARQAAAAAAAAAAAAAAAAAAAAAAAFX0ts/lo3C3T+K/nLNrxWf1Eeeg1zqUKmC1/0bc6afrUpvNrr1ZNrslEsmIWivrOVvU2ay2Pma2p9zyZSZUqlK4VehlGvbS2x4PZti+eEo8etM1OZhm8XKJ0mwfzPEJUpLNPam/Wi9z63wfWnzmpi9WWIYfRlcPWnCU4t8WlCkot9bSe3i0zoVxRpaU4SqlJ6s455NrbTn60JLm3Zrjsa4MpFxZSoXTtbqOrNerzrpRfrR6/uaNSseUwn/ACf4LbXWiVGvdW9Gcm6mcpU4Sbyr1Es21m9iLF8HbL9kt/3NP8JG+ThZaG0V7VX+oqFlMV0iL+Dll+yW/wC5p/hPvwdsv2S3/c0/wkmCK53p7h1K2hTpWVOEFry2Qior0IcIohqNSVlo7HD5tLWlKpP2ISnrxi30mlGT5sornLZpvFNqVRpKMm228slqR2vmWwr+j+APSmqq9dONknnm807p8FFb1R55etuXOty8OdnKV8meFZUp6Q3Cy5aOpRz4UE83Pq15LPsjB8T5pliWpSlWim3H0Y8ZTllGlBLnea2cHUkWjE7pQpchRSyWzLg30MuZcerZx2VfALT8v6Q+fT20LKbylwrXW5yXPGnm9vTfsk/WrOlq0Zwv8i4DSw9vOUIfHfSqNuVSXfOUn3kmAZaAAAAAAAAAAAAAAAAAAAAAAAAAAAIjHMLdy1eWWSqwWWT3VI79SX9nwfaS4Ap1lUfLu7w16tSPxatKWzPL1Zrg+aX9myWn5tpFR81v4ZTjt1JNxnF88JrJ5dae7fzHvi2CxxCauKMnSrRWUasd+XRnHdOPU+7Ir97cSsVqaRUsox3XFNOVPtbXxqT7dnWa2zpa8PsaeG2UbOyjqwgsks2+Obzb2tttvN85sldsb2bpKpZVo1YcNbKfhOLzz7cyQp4lL9JTX0ZZ/fFEwuUkDS/KGa2Qfe4/2bPOV9J+jqrs1pffq5e8iscUwS2xGqrjEoKWot0m9RpZta8M9WSWb3oyuLvWjqUM0ufc2uaK4L2vDPPNQmKaQ0LKuqNxUc6r9GlFcpUb9mlBbH15LtPGnhN3pC88U1rW3e+lGWdequapUi8qUX0Yty2vai4TP01K9SppJeywrBZatOD1bi6juprjRov1qzz2vaoZ5vOTyLrh9lTw6yhZWUVCnTioxiuCX3vr4n2xs6eH2kbSyhGEILKMYrJJdh7i0kAARQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEJeaKWl1V5eNPk5v16MpUpZ875NpSfbmaktFqtP/Y7+4XVUjRqe900/eWYDKYVZaN3jeVTEZZezb0U/F5/cZR0MhW2YldXVZPfF1eTj9WgobO1ss4Lkw0cLwe3wilyeGUYU09+pFJy+c98n1s3gCKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9k=" alt="Bosch Logo" class="slide-header-logo s1-bosch-img" />
+    <span class="s1-bosch" style="margin-left: -30px;">BOSCH</span>
+  </div>
+</div>
+    <div class="slide-tag a" style="--d:0.1s">// INTERNATIONAL COLLABORATIONS</div>
+    <div class="slide-headline a" style="--d:0.25s">Beyond the Lab. <em>International Reach.</em></div>
+
+    <div class="s4-grid">
+      <div class="s4-card a" style="--d:0.45s">
+        <div class="s4-flag">Academic · Iowa State University, USA</div>
+        <div class="s4-title">CPS Security: Bridging Privacy, Verification, Intelligence & Forensics</div>
+        <div class="s4-tags">
+          <span class="s4-tag">Privacy & Data Confidentiality</span>
+          <span class="s4-tag">Hardware Trust (PUFs, TPM)</span>
+          <span class="s4-tag">AI/ML Threat Detection</span>
+          <span class="s4-tag">Formal Verification</span>
+          <span class="s4-tag">Digital Forensics</span>
+        </div>
+        <div class="s4-outcome">Published — IEEE Access · Q1 SCIMAGO (2026)</div>
+      </div>
+
+      <div class="s4-card a" style="--d:0.65s">
+        <div class="s4-flag">Industry · Bosch Cyber Security Team</div>
+        <div class="s4-title">aRNA Adversarial Attack on UWB Jammer Localization Model</div>
+        <div class="s4-tags">
+          <span class="s4-tag">ConvNeXt-1D Autoencoder</span>
+          <span class="s4-tag">PGD Adversarial Attack</span>
+          <span class="s4-tag">UWB Localization</span>
+          <span class="s4-tag">Gradient-Reversal Domain Adaptation</span>
+        </div>
+        <div class="s4-big-lbl">Error Amplification — 37.2cm → 150.8cm Under Full Attack</div>
+        <div class="s4-outcome">Under Review — Bosch Joint Research</div>
+      </div>
+
+      <div class="s4-card a" style="--d:0.85s">
+        <div class="s4-flag">IEEE EDTM 2026 · Penang, Malaysia</div>
+        <div class="s4-title">BLE Microsensor Cyber Physical Hardening — VAPT & IDS-Based Mitigation</div>
+        <div class="s4-tags">
+          <span class="s4-tag">BLE Protocol Security</span>
+          <span class="s4-tag">VAPT Methodology</span>
+          <span class="s4-tag">IDS Mitigation</span>
+          <span class="s4-tag">Embedded Systems</span>
+        </div>
+        <div class="s4-outcome" style="margin-top:auto;">Accepted · Invited Speaker — Track 8: Reliability & Testing</div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- ========== SLIDE 5 — RECOGNITION ========== -->
+  <div class="slide s5" data-index="4">
+    
+    <div class="slide-header">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShaGJCGh76iC0XXCQtNmU1k8eIG76szdRz6Q&s" alt="BITS Pilani WILP Logo" class="slide-header-logo s1-brand-img" />
+  <div class="slide-header-right">
+    <img src="data:image/jpeg;base64,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" alt="Bosch Logo" class="slide-header-logo s1-bosch-img" />
+    <span class="s1-bosch" style="margin-left: -30px;">BOSCH</span>
+  </div>
+</div>
+    <div class="slide-tag a" style="--d:0.1s">// RECOGNITION & VALIDATION</div>
+    <div class="slide-headline a" style="--d:0.25s">Recognized at the <em>Highest Levels.</em></div>
+
+    <div class="s5-grid">
+      <div class="s5-cell a" style="--d:0.45s">
+        <div class="s5-award">Government of India · MeitY / DSCI</div>
+        <div class="s5-big">60<sup>th</sup></div>
+        <div class="s5-desc">of 800 Teams</div>
+        <div class="s5-body">Shortlisted to Stage 3 of India's National Cybersecurity Innovation Challenge under MeitY/ISEA collaboration with DSCI. Three MVPs submitted: IoT fuzzing, FinTech fraud detection, AI-powered forensics.</div>
+      </div>
+
+      <div class="s5-cell a" style="--d:0.65s">
+        <div class="s5-award">NEURAX 2.0 · National Hackathon</div>
+        <div class="s5-big">1<sup>st</sup></div>
+        <div class="s5-desc">National Prize</div>
+        <div class="s5-body">First prize at CMR Technical Campus's 24-hour flagship hackathon. Winning system: a multi-agent autonomous fuzz testing platform for WPA2/WPA3, BLE, and ZigBee wireless security protocols.</div>
+      </div>
+
+      <div class="s5-cell a" style="--d:0.85s">
+        <div class="s5-award">IEEE Access · Q1 SCIMAGO</div>
+        <div class="s5-big" style="font-size:clamp(48px,7.5vw,96px); line-height:1.02;">IEEE Q1</div>
+        <div class="s5-desc">Flagship International Journal</div>
+        <div class="s5-body">First survey to holistically unify Cyber-Physical Systems security across all five pillars — privacy, hardware trust, AI/ML detection, formal verification, and digital forensics. Co-authored with Iowa State University, USA.</div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- ========== SLIDE 6 — CLOSE ========== -->
+  <div class="slide s6 grid-overlay" data-index="5">
+    
+    <div class="slide-header">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShaGJCGh76iC0XXCQtNmU1k8eIG76szdRz6Q&s" alt="BITS Pilani WILP Logo" class="slide-header-logo s1-brand-img" />
+  <div class="slide-header-right">
+    <img src="data:image/jpeg;base64,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" alt="Bosch Logo" class="slide-header-logo s1-bosch-img" />
+    <span class="s1-bosch" style="margin-left: -30px;">BOSCH</span>
+  </div>
+</div>
+    <div class="s6-inner">
+      <div class="s6-watermark a" style="--d:0.05s">OxCyber</div>
+
+      <div class="s6-headline a" style="--d:0.25s">
+        The Next Generation<br>of <em>Student</em> Cybersecurity<br>is Here.
+      </div>
+
+      <div class="gold-rule a" style="--d:0.5s; max-width:300px; margin: 0 auto 3vh;"></div>
+
+      <div class="s6-sub a" style="--d:0.65s">
+        Student Club · OxCyber · Penetration Testing Center · BITS Pilani WILP Division
+      </div>
+
+      <div class="s6-partners a" style="--d:0.8s">
+        <div class="s6-partner"><div class="s6-dot"></div>Bosch Global Software Technologies</div>
+        <div class="s6-partner"><div class="s6-dot"></div>Iowa State University, USA</div>
+        <div class="s6-partner"><div class="s6-dot"></div>IEEE EDTM 2026 — Penang</div>
+        <div class="s6-partner"><div class="s6-dot"></div>MeitY / DSCI — Govt. of India</div>
+      </div>
+
+      <div class="s6-cta a" style="--d:1s">
+        Partner With Us &nbsp;→&nbsp; wilp.bits-pilani.ac.in
+      </div>
+    </div>
+    
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Progress bar -->
+<div id="progress"></div>
+
+<!-- Nav dots -->
+<div id="nav-dots">
+  <div class="dot" onclick="jumpTo(0)"></div>
+  <div class="dot" onclick="jumpTo(1)"></div>
+  <div class="dot" onclick="jumpTo(2)"></div>
+  <div class="dot" onclick="jumpTo(3)"></div>
+  <div class="dot" onclick="jumpTo(4)"></div>
+  <div class="dot" onclick="jumpTo(5)"></div>
+</div>
+
+<!-- Counter -->
+<div id="counter">01 / 06</div>
+
+<script>
+/* ===== SLIDESHOW ENGINE ===== */
+const SLIDE_MS   = 9000;   // ms per slide
+const FADE_MS    = 800;    // transition duration (must match CSS)
+
+const slides     = document.querySelectorAll('.slide');
+const dots       = document.querySelectorAll('.dot');
+const counter    = document.getElementById('counter');
+const progress   = document.getElementById('progress');
+
+let current = 0;
+let autoTimer = null;
+let progressRaf = null;
+
+/* Pad number */
+const pad = n => (n < 10 ? '0' : '') + n;
+
+/* Counter animation */
+function animateCounter(el) {
+  const target   = parseInt(el.dataset.count);
+  const suffix   = el.dataset.suffix || '';
+  const total    = 1800;
+  const start    = performance.now();
+
+  function step(now) {
+    const elapsed = now - start;
+    const t = Math.min(elapsed / total, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const val  = Math.round(target * ease);
+    el.textContent = val + suffix;
+    if (t < 1) requestAnimationFrame(step);
+  }
+  setTimeout(() => requestAnimationFrame(step), 800);
+}
+
+/* Static text swap */
+function animateStatic(el) {
+  setTimeout(() => { el.textContent = el.dataset.static; }, 950);
+}
+
+/* Run all animations for a slide */
+function runSlideAnimations(slide) {
+  slide.querySelectorAll('[data-count]').forEach(animateCounter);
+  slide.querySelectorAll('[data-static]').forEach(animateStatic);
+}
+
+/* Progress bar */
+function startProgress() {
+  cancelAnimationFrame(progressRaf);
+  progress.style.transition = 'none';
+  progress.style.width = '0%';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    progress.style.transition = `width ${SLIDE_MS}ms linear`;
+    progress.style.width = '100%';
+  }));
+}
+
+/* Go to slide */
+function goTo(index, resetTimer = true) {
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+
+  current = ((index % slides.length) + slides.length) % slides.length;
+
+  const slide = slides[current];
+  slide.classList.add('active');
+  dots[current].classList.add('active');
+  counter.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+
+  runSlideAnimations(slide);
+  startProgress();
+
+  if (resetTimer) {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goTo(current + 1), SLIDE_MS);
+  }
+}
+
+/* External jump */
+function jumpTo(index) { goTo(index); }
+
+/* Keyboard nav */
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+});
+
+/* Init */
+goTo(0);
+</script>
+
+</body>
+</html>
